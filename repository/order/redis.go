@@ -48,7 +48,7 @@ func (r *RedisRepo) Insert(ctx context.Context, order model.Order) error {
 
 var ErrNotExist = errors.New("order does not exist")
 
-func (r *RedisRepo) FindById(ctx context.Context, id uint64) (model.Order, error) {
+func (r *RedisRepo) FindByID(ctx context.Context, id uint64) (model.Order, error) {
 	key := orderIDKey(id)
 
 	value, err := r.Client.Get(ctx, key).Result()
@@ -72,7 +72,7 @@ func (r *RedisRepo) DeleteByID(ctx context.Context, id uint64) error {
 
 	txn := r.Client.TxPipeline()
 
-	err := r.Client.Del(ctx, key).Err()
+	err := txn.Del(ctx, key).Err()
 	if errors.Is(err, redis.Nil) {
 		txn.Discard()
 		return ErrNotExist
@@ -111,8 +111,8 @@ func (r *RedisRepo) Update(ctx context.Context, order model.Order) error {
 }
 
 type FindAllPage struct {
-	Count  uint64
-	Curser uint64
+	Size   uint64
+	Offset uint64
 }
 
 type FindResult struct {
@@ -121,7 +121,7 @@ type FindResult struct {
 }
 
 func (r *RedisRepo) FindAll(ctx context.Context, page FindAllPage) (FindResult, error) {
-	res := r.Client.SScan(ctx, "orders", page.Curser, "*", int64(page.Count))
+	res := r.Client.SScan(ctx, "orders", page.Offset, "*", int64(page.Size))
 
 	keys, cursor, err := res.Result()
 	if err != nil {
