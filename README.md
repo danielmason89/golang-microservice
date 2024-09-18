@@ -1,5 +1,6 @@
 # Golang Microservice Course Files
-A "fork" from dreamsofcode-io: Golang Microservice Course -> https://github.com/dreamsofcode-io/golang-microservice-course-nn
+
+A "fork" from dreamsofcode-io: Golang Microservice Course -> <https://github.com/dreamsofcode-io/golang-microservice-course-nn>
 
 ## Requirements
 
