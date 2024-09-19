@@ -1,0 +1,10 @@
+version: "1.0"
+services:
+  microservice_go_app:
+    build: ./microservice_go_app
+    container_name: microservice_go_app_container
+    ports:
+      - ""
+    volumes:
+      - "../microservice_go_app:/app"
+      - ""
